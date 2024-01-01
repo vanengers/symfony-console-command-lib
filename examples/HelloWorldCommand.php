@@ -16,7 +16,6 @@ class HelloWorldCommand extends AbstractConsoleCommand
 
     public function executeCommand()
     {
-
     }
 
     public function getCommandName()
