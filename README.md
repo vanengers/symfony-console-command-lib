@@ -29,3 +29,6 @@ Each Option will be checked for default value and value inputed by the user
 Look at the [example](https://github.com/vanengers/symfony-console-command-lib/blob/530536fdae404d2564a3b8fbfc4299e81330971b/examples/HelloWorldCommand.php#L34)
 
 only simple types are expected: array, bool, int, string
+
+### All options are input as options and not arguments. So all options could be defaulted.
+You could implicitly require an input by setting the default value to null and setting the required flag to true
