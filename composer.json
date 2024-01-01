@@ -1,0 +1,30 @@
+{
+  "name": "vanengers/symfony-console-command-lib",
+  "description": "Symfony Console Command library",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Vanengers\\SymfonyConsoleCommandLib\\": "src/"
+    }
+  },
+  "autoload-dev": {
+      "psr-4": {
+        "Vanengers\\SymfonyConsoleCommandLib\\Tests\\": "tests/",
+        "Vanengers\\examples\\": "examples/"
+      }
+  },
+  "authors": [
+    {
+      "name": "George van Engers",
+      "email": "vanengers@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^8.0 || ^7.4",
+    "symfony/console": "^3.4 || ~4.0 || ~5.0 || ~6.0"
+  },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
+}
