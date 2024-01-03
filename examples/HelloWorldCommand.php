@@ -14,6 +14,8 @@ class HelloWorldCommand extends AbstractConsoleCommand
 
     public array $jobs = [];
 
+    private string $private_name = '';
+
     public function executeCommand()
     {
     }
@@ -37,6 +39,8 @@ class HelloWorldCommand extends AbstractConsoleCommand
 
             new Option('name_nodef', 'name param', 'string', null, true),
             new Option('jobs', 'jobs array param', 'array', [], true),
+
+            new Option('private_name', 'private param', 'string', 'jantje', true),
         ];
     }
 }

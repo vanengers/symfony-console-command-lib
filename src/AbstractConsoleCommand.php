@@ -1,6 +1,7 @@
 <?php
 
 namespace Vanengers\SymfonyConsoleCommandLib;
+use ReflectionClass;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -65,15 +66,49 @@ abstract class AbstractConsoleCommand extends Command
                         $exploded = is_array($value) ? $value : explode(',', $value);
                         foreach ($exploded as $item) {
                             if (!empty($item)) {
-                                $this->{$assign}[] = $item;
+                                $get = $this->getProperty($assign);
+                                $get[] = $item;
+                                $this->setProperty($assign, $get);
                             }
                         }
                     } else {
-                        $this->{$assign} = $value;
+                        $this->setProperty($assign, $value);
                     }
 
                 }
             }
+        }
+    }
+
+    private function getProperty($name)
+    {
+        $reset = false;
+        $reflectedClass = new ReflectionClass($this);
+        $reflection = $reflectedClass->getProperty($name);
+        if (!$reflection->isPublic()) {
+            $reflection->setAccessible(true);
+            $reset = true;
+        }
+        $value = $reflection->getValue($this);
+        if ($reset) {
+            $reflection->setAccessible(false);
+        }
+        return $value;
+    }
+
+    private function setProperty($name, $value)
+    {
+        $reset = false;
+        $reflectedClass = new ReflectionClass($this);
+        $reflection = $reflectedClass->getProperty($name);
+        if (!$reflection->isPublic()) {
+            $reflection->setAccessible(true);
+            $reset = true;
+        }
+        $reflection->setAccessible(true);
+        $reflection->setValue($this, $value);
+        if ($reset) {
+            $reflection->setAccessible(false);
         }
     }
 
