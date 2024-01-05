@@ -3,6 +3,7 @@
 namespace Vanengers\SymfonyConsoleCommandLib\Param;
 
 use Exception;
+use Vanengers\SymfonyConsoleCommandLib\Param\Validator\IParamValidate;
 
 class Option
 {
@@ -13,18 +14,22 @@ class Option
     public string $type;
     public string $property;
 
+    /** @var IParamValidate[] $validaters */
+    private array $validaters = [];
+
     /**
      * @throws Exception
      */
     public function __construct(string $name, string $description, string $type, $defaultValue,
-                                bool $required = false, string $property = '')
+                                bool $required = false, string $property = null, array $validaters = [])
     {
         $this->name = $name;
         $this->description = $description;
         $this->type = $type;
         $this->defaultValue = $defaultValue;
         $this->required = $required;
-        $this->property = $property;
+        $this->property = is_null($property) ? '' : $property;
+        $this->validaters = $validaters;
 
         $this->validate();
     }
@@ -53,6 +58,13 @@ class Option
         if (is_null($this->defaultValue)) {
             return true; // we IMPLICITLY require an INPUT value from the user, when there is no default value
         }
+
+        foreach($this->validaters as $validater) {
+            if (!$validater instanceof IParamValidate) {
+                throw new Exception('Invalid validater for option ' . $this->name);
+            }
+        }
+
         return $this->__validate($this->defaultValue, 'defaultValue');
     }
 
@@ -78,6 +90,12 @@ class Option
 
         if ($this->type == 'string' && !$this->validateString($value)) {
             throw new Exception('Invalid '.$n.' for option ' . $this->name);
+        }
+
+        foreach($this->validaters as $validater) {
+            if (!$validater->validate($value)) {
+                throw new Exception($validater->getMessage());
+            }
         }
 
         return true;
@@ -118,6 +136,10 @@ class Option
     private function validateString($value): bool
     {
         if (!is_string($value)) {
+            return false;
+        }
+
+        if (empty(trim($value))) {
             return false;
         }
 

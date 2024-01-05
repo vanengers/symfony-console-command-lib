@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Tester\CommandTester;
 use Vanengers\examples\HelloWorldCommand;
+use Vanengers\examples\HelloWorldCommandFileExistsValidatorWithoutDefaultFile;
 use Vanengers\SymfonyConsoleCommandLib\Tests\Mock\ConsoleMock;
 
 class ValidateParamTypeStringTest extends TestCase
@@ -35,5 +36,23 @@ class ValidateParamTypeStringTest extends TestCase
         $exit = $this->command->run(new ArrayInput($args), new ConsoleOutput());
         $this->assertEquals(0, $exit);
         $this->assertEquals($name, $this->command->name);
+    }
+
+    public function testParameterConfigEmptyThrowsException()
+    {
+        $command = new HelloWorldCommandFileExistsValidatorWithoutDefaultFile();
+
+        $name = 'Vanengers';
+
+        $args = array_merge(ConsoleMock::ARGV_VALID,[
+            '--name'=>$name,
+        ]);
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Option config is required');
+
+        $exit = $command->run(new ArrayInput($args), new ConsoleOutput());
+        $this->assertEquals(0, $exit);
+        $this->assertEquals($name, $command->name);
     }
 }

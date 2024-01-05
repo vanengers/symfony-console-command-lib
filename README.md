@@ -32,3 +32,14 @@ only simple types are expected: array, bool, int, string
 
 ### All options are input as options and not arguments. So all options could be defaulted.
 You could implicitly require an input by setting the default value to null and setting the required flag to true
+
+### Validators
+You can add validators to the Option in getOptions
+
+```php
+new Option('config', 'name param', 'string', null, true, null, [
+    new FileExistsValidator(),
+])
+```
+By setting default value to null and required to true, you can require a file that exists.
+Settting up validators is easy, just create a class that implements the <b>IParamValidate</b> interface and add it to the option.
